@@ -1,22 +1,20 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Collections.Immutable;
+using System.ComponentModel.Design;
 using System.Reflection;
-
+using CC = System.ConsoleColor;
 Console.WriteLine("Hi! \n Here is my third mini project \n I want to share somthing now: \n The base need to be a good programmer is high concentration that \n " +
     "that I am not verey good at it. But I have a verey good news for myself.\n Today morning I watched a scientific documentary about the \n" +
     "the human what I learnt is man is able to train the brain. \n Now I want to start brain excercises for more concentration\n Let's start");
 
-// Defining the number each sold ones.
-int soldItemNumbers = 0;
-int soldComputerNumbers =0;
-int soldMobileNumber =0;
+
 
 
 // here three lists are being created: sold Items, computers and mobile
 
 List<Items> items = new List<Items>
 {
-    new Computer("Computer", "Samsung", "SD", Convert.ToDateTime("2019-10-11"), "Spain", 1000),
+    new Computer("Computer", "Samsung", "SD", Convert.ToDateTime("2019-10-11"), "England", 1000),
     new Mobile("Mobile", "IPhone", "12", Convert.ToDateTime("2018-11-11"), "Sweden", 100),
     new Computer("Computer", "Levond", "SD", Convert.ToDateTime("2002-10-10"), "Spain", 1000),
     new Computer("Mobile", "HP", "SD", Convert.ToDateTime("2023-03-10"), "England", 700),
@@ -40,10 +38,26 @@ List<Items> items = new List<Items>
 
 Console.WriteLine("Type".PadRight(15) + "Brand".PadRight(15) + "Model".PadRight(15) + "PurchaseDate".PadRight(15) + "Office".PadRight(15) + "Price");
 
+items = items.OrderBy(item => item.Type).ThenBy(item => item.Office).ThenBy(item => item.Date).ToList();
+
+TimeSpan timeSincePurchase;
+
 foreach (var item in items) 
 {
-    
-    Console.WriteLine(item.Type.PadRight(15) + item.Brand.PadRight(15) + item.Model.PadRight(15) + item.Date.ToString("yyyy-MM-dd").PadRight(15) + item.Office.PadRight(15) + item.Price);
+    timeSincePurchase = DateTime.Now - item.Date;
+    if(timeSincePurchase.Days > 1095)
+       
+    {
+        Items.Print(item.Type.PadRight(15) + item.Brand.PadRight(15) + item.Model.PadRight(15) + 
+            item.Date.ToString("yyyy-MM-dd").PadRight(15) + item.Office.PadRight(15) + item.Price,CC.Red);
+
+    }
+    else if (timeSincePurchase.Days < 913 )
+    {
+        Items.Print(item.Type.PadRight(15) + item.Brand.PadRight(15) + item.Model.PadRight(15) +
+            item.Date.ToString("yyyy-MM-dd").PadRight(15) + item.Office.PadRight(15) + item.Price, CC.Yellow);
+
+    }
 }
 
 
@@ -92,9 +106,19 @@ class Items
     public DateTime Date { get; set; }
     public string Office { get; set; }
     public int Price { get; set; }
-    
-    
+
+    internal static void Print(string text, CC fgColor = CC.White, CC bgColor = CC.Black)
+    {
+        Console.ForegroundColor = fgColor;
+        Console.BackgroundColor = bgColor;
+        Console.WriteLine(text);
+        Console.ResetColor();
+
+    }
 }
+
+
+
 // Two cildren classes are being created for computer and mobile with Items parent
 
 class Computer : Items
